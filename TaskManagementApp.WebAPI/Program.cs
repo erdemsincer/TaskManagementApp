@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using TaskManagementApp.DataAccessLayer.Abstract;
 using TaskManagementApp.DataAccessLayer.Contexts;
+using TaskManagementApp.DataAccessLayer.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+builder.Services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
