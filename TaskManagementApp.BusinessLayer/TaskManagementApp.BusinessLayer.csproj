@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManagementApp.DataAccessLayer\TaskManagementApp.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\TaskManagementApp.DtoLayer\TaskManagementApp.DtoLayer.csproj" />
+    <ProjectReference Include="..\TaskManagementApp.EntityLayer\TaskManagementApp.EntityLayer.csproj" />
+  </ItemGroup>
+
+</Project>
