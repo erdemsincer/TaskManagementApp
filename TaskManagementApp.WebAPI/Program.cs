@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using TaskManagementApp.BusinessLayer.Abstract;
+using TaskManagementApp.BusinessLayer.Concrete;
 using TaskManagementApp.DataAccessLayer.Abstract;
 using TaskManagementApp.DataAccessLayer.Contexts;
 using TaskManagementApp.DataAccessLayer.Repositories;
@@ -16,6 +18,13 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 builder.Services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
+builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
+builder.Services.AddScoped<IUserService, UserManager>();
+builder.Services.AddScoped<IRoleService, RoleManager>();
+builder.Services.AddScoped<IProjectService, ProjectManager>();
+builder.Services.AddScoped<ITaskItemService, TaskItemManager>();
+builder.Services.AddScoped<ICommentService, CommentManager>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
