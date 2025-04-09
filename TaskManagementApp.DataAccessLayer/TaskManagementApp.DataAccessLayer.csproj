@@ -10,4 +10,8 @@
     <ProjectReference Include="..\TaskManagementApp.EntityLayer\TaskManagementApp.EntityLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contexts\" />
+  </ItemGroup>
+
 </Project>
