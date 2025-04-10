@@ -10,6 +10,8 @@ namespace TaskManagementApp.BusinessLayer.Mapping.AutoMapperProfiles
         {
             CreateMap<CreateProjectDto, Project>();
             CreateMap<Project, ResultProjectDto>();
+           
+
         }
     }
 }

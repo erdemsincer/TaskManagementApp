@@ -18,4 +18,10 @@
     <ProjectReference Include="..\TaskManagementApp.EntityLayer\TaskManagementApp.EntityLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Mediator\Results\UserResult\" />
+    <Folder Include="Features\Mediator\Results\TaskItemResult\" />
+    <Folder Include="Features\Mediator\Results\RoleResult\" />
+  </ItemGroup>
+
 </Project>
