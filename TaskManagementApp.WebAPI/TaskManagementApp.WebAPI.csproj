@@ -23,8 +23,4 @@
     <ProjectReference Include="..\TaskManagementApp.DtoLayer\TaskManagementApp.DtoLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
