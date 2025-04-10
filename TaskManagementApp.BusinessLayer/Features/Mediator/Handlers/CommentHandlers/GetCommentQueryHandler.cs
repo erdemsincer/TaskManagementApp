@@ -5,7 +5,7 @@ using TaskManagementApp.BusinessLayer.Features.Mediator.Results.CommentResult;
 
 namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.CommentHandlers
 {
-    public class GetCommentQueryHandler : IRequestHandler<GetCommentQuery, List<GetCommentQueryResult>
+    public class GetCommentQueryHandler : IRequestHandler<GetCommentQuery, List<GetCommentQueryResult>>
     {
         private readonly ICommentService _commentService;
 
