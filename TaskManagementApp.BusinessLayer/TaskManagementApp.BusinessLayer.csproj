@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Mediator\Queries\UserQueries\" />
     <Folder Include="Features\Mediator\Results\UserResult\" />
     <Folder Include="Features\Mediator\Results\RoleResult\" />
   </ItemGroup>
