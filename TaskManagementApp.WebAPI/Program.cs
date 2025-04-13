@@ -1,7 +1,9 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using TaskManagementApp.BusinessLayer.Abstract;
 using TaskManagementApp.BusinessLayer.Concrete;
 using TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.ProjectHandlers;
@@ -10,6 +12,7 @@ using TaskManagementApp.DataAccessLayer.Abstract;
 using TaskManagementApp.DataAccessLayer.Contexts;
 using TaskManagementApp.DataAccessLayer.EntityFrameworkCore;
 using TaskManagementApp.DataAccessLayer.Repositories;
+using TaskManagementApp.BusinessLayer.Validators; // validator klasörün buradaysa
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,10 +28,25 @@ builder.Services.AddSwaggerGen();
 // AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// MediatR (CQRS)
+// MediatR
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(GetProjectQueryHandler).Assembly);
+});
+
+// FluentValidation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserValidator>();
+
+// CORS (Gerekirse UI erişimi için)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 // Generic Repositories
@@ -53,7 +71,7 @@ builder.Services.AddScoped<ITaskItemDal, EfTaskItemDal>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-// JWT Authentication
+// JWT Auth
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -71,7 +89,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// Swagger
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -80,7 +98,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // ?? Token kontrol�
+app.UseCors("AllowAll"); // 🌐 UI'dan çağrı yapılacaksa gerekli
+
+app.UseAuthentication(); // 🔐 önce auth middleware
 app.UseAuthorization();
 
 app.MapControllers();
