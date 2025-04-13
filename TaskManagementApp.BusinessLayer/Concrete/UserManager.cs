@@ -13,6 +13,19 @@ namespace TaskManagementApp.BusinessLayer.Concrete
             _userDal = userDal;
         }
 
-        
+        public async Task<List<User>> GetAllWithRoleAsync()
+        {
+            return await _userDal.GetAllWithRoleAsync();
+        }
+
+        public async Task<User> GetByEmailAsync(string email)
+        {
+           return await _userDal.GetByEmailAsync(email);
+        }
+
+        public async Task<User> GetByIdWithRoleAsync(int id)
+        {
+            return await _userDal.GetByIdWithRoleAsync(id);
+        }
     }
 }

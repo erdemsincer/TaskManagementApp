@@ -7,6 +7,6 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Commands.UserCommand
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; } // Hashlenecek
-        public int RoleId { get; set; }
+        
     }
 }

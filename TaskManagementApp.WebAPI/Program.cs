@@ -1,12 +1,15 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using TaskManagementApp.BusinessLayer.Abstract;
 using TaskManagementApp.BusinessLayer.Concrete;
 using TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.ProjectHandlers;
+using TaskManagementApp.BusinessLayer.Services.Security;
 using TaskManagementApp.DataAccessLayer.Abstract;
 using TaskManagementApp.DataAccessLayer.Contexts;
 using TaskManagementApp.DataAccessLayer.EntityFrameworkCore;
 using TaskManagementApp.DataAccessLayer.Repositories;
-using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +49,26 @@ builder.Services.AddScoped<IRoleDal, EfRoleDal>();
 builder.Services.AddScoped<IProjectDal, EfProjectDal>();
 builder.Services.AddScoped<ITaskItemDal, EfTaskItemDal>();
 
+// Custom Services
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+// JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
 var app = builder.Build();
 
 // Swagger
@@ -56,6 +79,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication(); // ?? Token kontrolü
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();

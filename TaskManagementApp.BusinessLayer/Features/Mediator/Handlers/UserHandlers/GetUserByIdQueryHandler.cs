@@ -16,7 +16,7 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.UserHandler
 
         public async Task<GetUserByIdQueryResult> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userService.GetByIdAsync(request.Id);
+            var user = await _userService.GetByIdWithRoleAsync(request.Id);
             if (user == null)
             {
                 return null;

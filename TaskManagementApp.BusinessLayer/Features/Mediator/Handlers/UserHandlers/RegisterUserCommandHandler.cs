@@ -20,12 +20,12 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.UserHandler
         {
             var hashedPassword = _passwordHasher.Hash(request.Password);
 
-            await _userService.AddAsync( new EntityLayer.Entities.User
+            await _userService.AddAsync(new EntityLayer.Entities.User
             {
                 FullName = request.FullName,
                 Email = request.Email,
                 PasswordHash = hashedPassword,
-                RoleId = request.RoleId,
+                RoleId = 2,
                 CreatedDate = DateTime.UtcNow
             });
         }

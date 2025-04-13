@@ -16,7 +16,7 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.UserHandler
 
         public async Task<List<GetAllUsersQueryResult>> Handle(GetAllUsersQuery request,CancellationToken cancellationToken)
         {
-            var users = await _userService.GetAllAsync();
+            var users = await _userService.GetAllWithRoleAsync();
 
             var result = users.Select(user => new GetAllUsersQueryResult
             {
