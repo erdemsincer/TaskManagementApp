@@ -27,5 +27,15 @@ namespace TaskManagementApp.BusinessLayer.Concrete
         {
             return await _userDal.GetByIdWithRoleAsync(id);
         }
+        public async Task<User> GetUserWithAssignedTasksAsync(int id)
+        {
+            return await _userDal.GetUserWithAssignedTasksAsync(id);
+        }
+
+        public async Task<(int taskCount, int commentCount)> GetUserActivitySummaryAsync(int id)
+        {
+            return await _userDal.GetUserActivitySummaryAsync(id);
+        }
+
     }
 }
