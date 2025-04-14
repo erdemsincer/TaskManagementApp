@@ -50,5 +50,35 @@ namespace TaskManagementApp.WebAPI.Controllers
             await _mediator.Send(command);
             return Ok("Task Item başarıyla güncellendi");
         }
+        [HttpGet("GetByProject/{projectId}")]
+        public async Task<IActionResult> GetTasksByProject(int projectId)
+        {
+            var result = await _mediator.Send(new GetTasksByProjectIdQuery(projectId));
+            return Ok(result);
+        }
+
+        // 🔹 2. Kullanıcıya ait görevler
+        [HttpGet("GetByUser/{userId}")]
+        public async Task<IActionResult> GetTasksByUser(int userId)
+        {
+            var result = await _mediator.Send(new GetTasksByUserIdQuery(userId));
+            return Ok(result);
+        }
+
+        // 🔹 3. Belirli statüdeki görevler (ToDo, InProgress, Done)
+        [HttpGet("GetByStatus/{status}")]
+        public async Task<IActionResult> GetTasksByStatus(string status)
+        {
+            var result = await _mediator.Send(new GetTasksByStatusQuery(status));
+            return Ok(result);
+        }
+
+        // 🔹 4. Deadline'ı geçmiş görevler
+        [HttpGet("GetOverdue")]
+        public async Task<IActionResult> GetOverdueTasks()
+        {
+            var result = await _mediator.Send(new GetOverdueTasksQuery());
+            return Ok(result);
+        }
     }
 }

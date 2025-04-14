@@ -41,5 +41,11 @@ namespace TaskManagementApp.WebAPI.Controllers
             await _mediator.Send(new RemoveCommentCommand(id));
             return Ok("Comment başarıyla silindi");
         }
+        [HttpGet("GetByTaskItem/{taskItemId}")]
+        public async Task<IActionResult> GetCommentsByTaskItemId(int taskItemId)
+        {
+            var result = await _mediator.Send(new GetCommentsByTaskItemIdQuery(taskItemId));
+            return Ok(result);
+        }
     }
 }

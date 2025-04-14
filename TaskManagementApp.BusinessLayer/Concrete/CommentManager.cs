@@ -12,5 +12,11 @@ namespace TaskManagementApp.BusinessLayer.Concrete
         {
             _commentDal = commentDal;
         }
+
+        public async Task<List<Comment>> GetCommentsWithUserByTaskItemIdAsync(int taskItemId)
+        {
+            return await _commentDal.GetCommentsWithUserByTaskItemIdAsync(taskItemId);
+        }
+
     }
 }
