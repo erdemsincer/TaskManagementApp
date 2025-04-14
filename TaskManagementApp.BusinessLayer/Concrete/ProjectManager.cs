@@ -12,6 +12,21 @@ namespace TaskManagementApp.BusinessLayer.Concrete
         {
             _projectDal = projectDal;
         }
+
+        public async Task<List<Project>> GetAllWithOwnerAsync()
+        {
+            return await _projectDal.GetAllWithOwnerAsync();
+        }
+
+        public async Task<List<Project>> GetProjectsByUserIdAsync(int userId)
+        {
+            return await _projectDal.GetProjectsByUserIdAsync(userId);
+        }
+
+        public async Task<Project> GetProjectWithTasksAsync(int projectId)
+        {
+            return await _projectDal.GetProjectWithTasksAsync(projectId);
+        }
     }
   
 }
