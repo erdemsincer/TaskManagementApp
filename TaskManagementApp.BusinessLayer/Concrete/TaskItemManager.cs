@@ -12,6 +12,26 @@ namespace TaskManagementApp.BusinessLayer.Concrete
         {
             _taskItemDal = taskItemDal;
         }
+
+        public async Task<List<TaskItem>> GetTasksByProjectIdAsync(int projectId)
+        {
+            return await _taskItemDal.GetTasksByProjectIdAsync(projectId);
+        }
+
+        public async Task<List<TaskItem>> GetTasksByUserIdAsync(int userId)
+        {
+            return await _taskItemDal.GetTasksByUserIdAsync(userId);
+        }
+
+        public async Task<List<TaskItem>> GetTasksByStatusAsync(string status)
+        {
+            return await _taskItemDal.GetTasksByStatusAsync(status);
+        }
+
+        public async Task<List<TaskItem>> GetOverdueTasksAsync()
+        {
+            return await _taskItemDal.GetOverdueTasksAsync();
+        }
     }
-    
+
 }
