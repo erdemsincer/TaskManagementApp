@@ -46,5 +46,30 @@ namespace TaskManagementApp.WebAPI.Controllers
             await _mediator.Send(command);
             return Ok("Proje başarıyla güncellendi");
         }
+        [HttpGet("GetAllWithOwner")]
+        public async Task<IActionResult> GetAllProjectsWithOwner()
+        {
+            var result = await _mediator.Send(new GetAllProjectsWithOwnerQuery());
+            return Ok(result);
+        }
+
+        // 🔹 2. Kullanıcının projelerini getir
+        [HttpGet("GetByUser/{userId}")]
+        public async Task<IActionResult> GetProjectsByUserId(int userId)
+        {
+            var result = await _mediator.Send(new GetProjectsByUserIdQuery(userId));
+            return Ok(result);
+        }
+
+        // 🔹 3. Bir projenin içindeki görevlerle birlikte detayını getir
+        [HttpGet("GetWithTasks/{projectId}")]
+        public async Task<IActionResult> GetProjectWithTasks(int projectId)
+        {
+            var result = await _mediator.Send(new GetProjectWithTasksQuery(projectId));
+            if (result == null)
+                return NotFound("Proje bulunamadı.");
+
+            return Ok(result);
+        }
     }
 }
