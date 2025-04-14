@@ -34,6 +34,24 @@ namespace TaskManagementApp.WebAPI.Controllers
 
             return Ok(user);
         }
+        [HttpGet("GetUserWithTasks/{id}")]
+        public async Task<IActionResult> GetUserWithTasks(int id)
+        {
+            var result = await _mediator.Send(new GetUserWithTasksQuery(id));
+            if (result == null)
+                return NotFound("Kullanıcı bulunamadı");
+
+            return Ok(result);
+        }
+
+        // ✅ 2. Kullanıcının görev ve yorum sayısı
+        [HttpGet("GetUserActivitySummary/{id}")]
+        public async Task<IActionResult> GetUserActivitySummary(int id)
+        {
+            var result = await _mediator.Send(new GetUserActivitySummaryQuery(id));
+            return Ok(result);
+        }
+
     }
 }
 
