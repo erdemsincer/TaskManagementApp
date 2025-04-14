@@ -1,7 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using TaskManagementApp.BusinessLayer.Features.Mediator.Commands.TaskItemCommands;
+
 using TaskManagementApp.BusinessLayer.Features.Mediator.Queries.TaskltemQueries;
+using TaskManagementApp.WebAPI.Hubs;
 
 namespace TaskManagementApp.WebAPI.Controllers
 {
@@ -10,10 +13,12 @@ namespace TaskManagementApp.WebAPI.Controllers
     public class TaskItemController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public TaskItemController(IMediator mediator)
+        public TaskItemController(IMediator mediator, IHubContext<NotificationHub> hubContext)
         {
             _mediator = mediator;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -34,6 +39,10 @@ namespace TaskManagementApp.WebAPI.Controllers
         public async Task<IActionResult> CreateTaskItem(CreateTaskItemCommand command)
         {
             await _mediator.Send(command);
+
+            // 🔔 SignalR bildirimi
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", $"📌 Yeni görev oluşturuldu: {command.Title}");
+
             return Ok("Task Item başarıyla eklendi");
         }
 
@@ -50,6 +59,7 @@ namespace TaskManagementApp.WebAPI.Controllers
             await _mediator.Send(command);
             return Ok("Task Item başarıyla güncellendi");
         }
+
         [HttpGet("GetByProject/{projectId}")]
         public async Task<IActionResult> GetTasksByProject(int projectId)
         {
@@ -57,7 +67,6 @@ namespace TaskManagementApp.WebAPI.Controllers
             return Ok(result);
         }
 
-        // 🔹 2. Kullanıcıya ait görevler
         [HttpGet("GetByUser/{userId}")]
         public async Task<IActionResult> GetTasksByUser(int userId)
         {
@@ -65,7 +74,6 @@ namespace TaskManagementApp.WebAPI.Controllers
             return Ok(result);
         }
 
-        // 🔹 3. Belirli statüdeki görevler (ToDo, InProgress, Done)
         [HttpGet("GetByStatus/{status}")]
         public async Task<IActionResult> GetTasksByStatus(string status)
         {
@@ -73,7 +81,6 @@ namespace TaskManagementApp.WebAPI.Controllers
             return Ok(result);
         }
 
-        // 🔹 4. Deadline'ı geçmiş görevler
         [HttpGet("GetOverdue")]
         public async Task<IActionResult> GetOverdueTasks()
         {

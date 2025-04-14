@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using TaskManagementApp.BusinessLayer.Features.Mediator.Commands.ProjectCommand;
 using TaskManagementApp.BusinessLayer.Features.Mediator.Queries.ProjectQueries;
+using TaskManagementApp.WebAPI.Hubs;
 
 namespace TaskManagementApp.WebAPI.Controllers
 {
@@ -10,10 +12,12 @@ namespace TaskManagementApp.WebAPI.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ProjectController(IMediator mediator)
+        public ProjectController(IMediator mediator, IHubContext<NotificationHub> hubContext)
         {
             _mediator = mediator;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -22,30 +26,39 @@ namespace TaskManagementApp.WebAPI.Controllers
             var values = await _mediator.Send(new GetProjectQuery());
             return Ok(values);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProject(int id)
         {
             var value = await _mediator.Send(new GetProjctByIdQuery(id));
             return Ok(value);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateProject(CreateProjectCommand command)
         {
             await _mediator.Send(command);
+
+            // 🔔 SignalR Bildirimi
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", $"📁 Yeni proje eklendi: {command.Title}");
+
             return Ok("Proje başarıyla eklendi");
         }
+
         [HttpDelete]
         public async Task<IActionResult> RemoveProject(int id)
         {
             await _mediator.Send(new RemoveProjectCommand(id));
             return Ok("Proje başarıyla silindi");
         }
+
         [HttpPut]
         public async Task<IActionResult> UpdateProject(UpdateProjectCommand command)
         {
             await _mediator.Send(command);
             return Ok("Proje başarıyla güncellendi");
         }
+
         [HttpGet("GetAllWithOwner")]
         public async Task<IActionResult> GetAllProjectsWithOwner()
         {
@@ -53,7 +66,6 @@ namespace TaskManagementApp.WebAPI.Controllers
             return Ok(result);
         }
 
-        // 🔹 2. Kullanıcının projelerini getir
         [HttpGet("GetByUser/{userId}")]
         public async Task<IActionResult> GetProjectsByUserId(int userId)
         {
@@ -61,7 +73,6 @@ namespace TaskManagementApp.WebAPI.Controllers
             return Ok(result);
         }
 
-        // 🔹 3. Bir projenin içindeki görevlerle birlikte detayını getir
         [HttpGet("GetWithTasks/{projectId}")]
         public async Task<IActionResult> GetProjectWithTasks(int projectId)
         {
