@@ -67,5 +67,12 @@ namespace TaskManagementApp.UI.Controllers
             ViewBag.Error = "Kayıt sırasında bir hata oluştu!";
             return View();
         }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); 
+            return RedirectToAction("Login", "Account");
+        }
+
     }
 }
