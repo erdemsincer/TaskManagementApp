@@ -1,0 +1,66 @@
+﻿@model LoginUserDto
+
+@{
+    ViewData["Title"] = "Giriş Yap";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 450px;">
+        <div class="card-header text-center text-white"
+             style="background: linear-gradient(135deg, #1d3557, #457b9d); border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+            <h4 class="fw-bold mb-1">Task Management App</h4>
+            <span class="small">Giriş Paneli</span>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Login" method="post">
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="E-posta" />
+                    <label asp-for="Email"><i class="fa-solid fa-envelope me-1"></i> E-posta</label>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="form-floating mb-3 position-relative">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Şifreniz" id="passwordInput" />
+                    <label asp-for="Password"><i class="fa-solid fa-lock me-1"></i> Şifre</label>
+                    <i class="fa-solid fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-muted"
+                       id="togglePassword" style="cursor: pointer;"></i>
+                    <span asp-validation-for="Password" class="text-danger small d-block mt-1"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                    <i class="fa-solid fa-arrow-right-to-bracket me-1"></i> Giriş Yap
+                </button>
+            </form>
+
+            @if (ViewBag.Error != null)
+            {
+                    <div class="alert alert-danger text-center mt-3 mb-0">
+                    @ViewBag.Error
+                    </div>
+            }
+        </div>
+
+        <div class="card-footer bg-light text-center rounded-bottom-4 py-3">
+            <small class="text-muted">Hesabınız yok mu?</small>
+            <a href="/Account/Register" class="text-decoration-none fw-semibold ms-1">Kayıt Ol</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <script>
+            const togglePassword = document.getElementById("togglePassword");
+            const passwordInput = document.getElementById("passwordInput");
+
+            togglePassword.addEventListener("click", function () {
+                const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", type);
+                this.classList.toggle("fa-eye");
+                this.classList.toggle("fa-eye-slash");
+            });
+        </script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
