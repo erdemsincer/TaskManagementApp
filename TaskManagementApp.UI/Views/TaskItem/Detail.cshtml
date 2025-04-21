@@ -1,0 +1,113 @@
+﻿@model TaskManagementApp.DtoLayer.Dtos.TaskItemDtos.ResultTaskItemDto
+
+@{
+    ViewData["Title"] = "Görev Detayı";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<style>
+    .task-detail-card {
+        background-color: #fdfdfd;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+    }
+
+    .comment-item {
+        transition: background-color 0.2s;
+    }
+
+    .comment-item:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="mb-4">
+        <h2 class="text-primary">
+            <i class="fas fa-clipboard-list"></i> @Model.Title
+        </h2>
+    </div>
+
+    <div class="task-detail-card mb-5">
+        <p><strong><i class="fas fa-align-left"></i> Açıklama:</strong> @Model.Description</p>
+
+        <p>
+            <strong><i class="fas fa-traffic-light"></i> Durum:</strong>
+            @if (Model.Status == "Done")
+            {
+                <span class="badge bg-success">Tamamlandı</span>
+            }
+            else if (Model.Status == "InProgress")
+            {
+                <span class="badge bg-warning text-dark">Devam Ediyor</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary">Yapılacak</span>
+            }
+        </p>
+
+        <!-- ✅ Görev Durumu Güncelleme -->
+        <form asp-controller="TaskItem" asp-action="UpdateStatus" method="post" class="mb-3 mt-2">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <div class="input-group" style="max-width: 320px;">
+        <label class="input-group-text" for="statusSelect">Durum</label>
+                <select name="Status" class="form-select" id="statusSelect">
+                    @foreach (var status in new[] { "ToDo", "InProgress", "Done" })
+                    {
+                        var selectedAttr = Model.Status == status ? "selected=\"selected\"" : "";
+                        var label = status == "ToDo" ? "Yapılacak" :
+                        status == "InProgress" ? "Devam Ediyor" : "Tamamlandı";
+
+                        @Html.Raw($"<option value='{status}' {selectedAttr}>{label}</option>")
+                    }
+                </select>
+
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+    </div>
+</form>
+
+
+        <p><strong><i class="fas fa-bolt"></i> Öncelik:</strong> <span class="badge bg-secondary">@Model.Priority</span></p>
+        <p><strong><i class="fas fa-user"></i> Atanan Kişi:</strong> @(!string.IsNullOrEmpty(Model.AssignedToUser) ? Model.AssignedToUser : "-")</p>
+        <p><strong><i class="fas fa-diagram-project"></i> Proje:</strong> @(!string.IsNullOrEmpty(Model.ProjectTitle) ? Model.ProjectTitle : $"#{Model.ProjectId}")</p>
+        <p><strong><i class="fas fa-calendar-alt"></i> Deadline:</strong> @(Model.Deadline?.ToString("dd.MM.yyyy") ?? "-")</p>
+        <p><strong><i class="fas fa-clock"></i> Oluşturulma:</strong> @Model.CreatedDate.ToShortDateString()</p>
+    </div>
+
+    <div class="mb-4">
+        <h5 class="text-info">
+            <i class="fas fa-comments"></i> Yorumlar
+        </h5>
+
+        @if (Model.Comments != null && Model.Comments.Any())
+        {
+            <ul class="list-group mt-3">
+                @foreach (var comment in Model.Comments)
+                {
+                    <li class="list-group-item comment-item">
+                        <div class="d-flex justify-content-between">
+                            <strong><i class="fas fa-user-circle text-secondary"></i> @comment.UserFullName</strong>
+                            <small class="text-muted">@comment.CreatedDate.ToString("g")</small>
+                        </div>
+                        <div class="mt-1">@comment.Content</div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="alert alert-light border text-muted mt-3">
+                <i class="fas fa-info-circle"></i> Bu göreve henüz yorum yapılmamış.
+            </div>
+        }
+    </div>
+
+    <a asp-controller="TaskItem" asp-action="MyTasks" class="btn btn-outline-dark">
+        <i class="fas fa-arrow-left"></i> Görev Listesine Geri Dön
+    </a>
+</div>

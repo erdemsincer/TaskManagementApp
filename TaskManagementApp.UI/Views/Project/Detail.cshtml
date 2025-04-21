@@ -1,0 +1,82 @@
+﻿@model TaskManagementApp.DtoLayer.Dtos.ProjectDtos.ResultProjectWithTasksDto
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- FontAwesome CDN (ikonlar için) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<style>
+    .task-card {
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: 0.3s ease-in-out;
+    }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .comment-section {
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        margin-top: 15px;
+    }
+
+    .badge-status {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-3"><i class="fas fa-diagram-project"></i> @Model.Title</h2>
+    <p class="text-muted">@Model.Description</p>
+    <p>
+        <strong><i class="fas fa-calendar-alt"></i> Oluşturulma Tarihi:</strong>
+        @Model.CreatedDate.ToShortDateString()
+    </p>
+
+    <hr />
+    <h4 class="mt-4"><i class="fas fa-tasks"></i> Görevler</h4>
+
+    @if (Model.Tasks != null && Model.Tasks.Any())
+    {
+        @foreach (var task in Model.Tasks)
+        {
+            var badgeClass = task.Status switch
+            {
+                "ToDo" => "badge bg-secondary",
+                "InProgress" => "badge bg-warning text-dark",
+                "Done" => "badge bg-success",
+                _ => "badge bg-info"
+            };
+
+            <div class="card my-4 task-card">
+                <div class="card-body">
+                    <h5 class="card-title mb-1">
+                        <i class="fas fa-check-circle text-primary"></i> @task.Title
+                        <span class="@badgeClass badge-status float-end">@task.Status</span>
+                    </h5>
+                    <p class="text-muted mb-2">
+                        <strong><i class="far fa-clock"></i> Deadline:</strong>
+                        @(task.Deadline?.ToString("dd.MM.yyyy") ?? "-")
+                    </p>
+
+                    <div class="comment-section">
+                        <h6><i class="fas fa-comments"></i> Yorumlar</h6>
+                        @await Component.InvokeAsync("CommentByTaskItemId", new { taskItemId = task.Id, projectId = Model.Id })
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">Bu projeye ait görev bulunmamaktadır.</div>
+    }
+</div>

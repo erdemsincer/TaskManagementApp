@@ -8,7 +8,7 @@ namespace TaskManagementApp.BusinessLayer.Mapping.AutoMapperProfiles
     {
         public UserProfile()
         {
-            CreateMap<CreateUserDto, User>();
+            CreateMap<RegisterUserDto, User>();
             CreateMap<User, ResultUserDto>()
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName));
         }

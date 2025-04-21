@@ -7,7 +7,8 @@
         public string Description { get; set; }
 
         public int ProjectId { get; set; }
-        public int? AssignedToUserId { get; set; }
+        public string ProjectTitle { get; set; }
+        public string AssignedToUser { get; set; }
 
         public string Status { get; set; }  // ToDo, InProgress, Done
         public string Priority { get; set; }  // Low, Medium, High

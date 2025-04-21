@@ -1,0 +1,28 @@
+﻿@model List<TaskManagementApp.DtoLayer.Dtos.CommentDtos.ResultCommentDto>
+
+@if (Model.Any())
+{
+    <ul class="list-group mb-3">
+        @foreach (var comment in Model)
+        {
+            <li class="list-group-item">
+                <strong>@comment.UserFullName</strong> - @comment.CreatedDate.ToShortDateString()
+                <br />
+                @comment.Content
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-muted">Henüz yorum yok.</p>
+}
+
+<form method="post" asp-controller="Comment" asp-action="Add" class="mb-4">
+    <input type="hidden" name="TaskItemId" value="@ViewBag.TaskItemId" />
+    <input type="hidden" name="ProjectId" value="@ViewBag.ProjectId" />
+    <div class="mb-2">
+        <textarea name="Content" class="form-control" rows="2" placeholder="Yorum yaz..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm">Yorumu Ekle</button>
+</form>

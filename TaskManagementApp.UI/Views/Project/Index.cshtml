@@ -1,0 +1,32 @@
+﻿@model List<TaskManagementApp.DtoLayer.Dtos.ProjectDtos.ResultProjectDto>
+@{
+    ViewData["Title"] = "Projeler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Projeler</h2>
+    <table class="table table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Başlık</th>
+                <th>Açıklama</th>
+                <th>Tarih</th>
+                <th>Detay</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>@item.CreatedDate.ToShortDateString()</td>
+                    <td>
+                        <a href="/Project/Detail/@item.Id" class="btn btn-sm btn-primary">Detay</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

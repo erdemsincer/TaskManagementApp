@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- FontAwesome CDN (ikonlar için) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<style>
+    .dashboard-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 15px;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title i {
+        margin-right: 8px;
+    }
+
+    .dashboard-header {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        color: #333;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="dashboard-header text-center">👋 Hoş geldin, <span class="text-primary">@ViewBag.Name</span></h2>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="fas fa-folder-open"></i>Toplam Proje</h5>
+                    <p class="card-text display-5">@ViewBag.ProjectCount</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-success dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="fas fa-tasks"></i>Toplam Görev</h5>
+                    <p class="card-text display-5">@ViewBag.TaskCount</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-warning dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="fas fa-calendar-day"></i>Bugünkü Görevler</h5>
+                    <p class="card-text display-5">@ViewBag.TodayTaskCount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

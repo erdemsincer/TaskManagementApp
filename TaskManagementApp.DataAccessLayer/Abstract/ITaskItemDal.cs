@@ -8,6 +8,8 @@ namespace TaskManagementApp.DataAccessLayer.Abstract
         Task<List<TaskItem>> GetTasksByUserIdAsync(int userId);
         Task<List<TaskItem>> GetTasksByStatusAsync(string status);
         Task<List<TaskItem>> GetOverdueTasksAsync();
+        Task<TaskItem> GetTaskItemWithProjectAndCommentsAsync(int id);
+
 
 
     }

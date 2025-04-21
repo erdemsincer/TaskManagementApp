@@ -32,6 +32,10 @@ namespace TaskManagementApp.BusinessLayer.Concrete
         {
             return await _taskItemDal.GetOverdueTasksAsync();
         }
+        public async Task<TaskItem> GetTaskItemWithProjectAndCommentsAsync(int id)
+        {
+            return await _taskItemDal.GetTaskItemWithProjectAndCommentsAsync(id);
+        }
     }
 
 }

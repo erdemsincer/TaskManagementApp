@@ -16,24 +16,28 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.TaskItemHan
 
         public async Task<GetTaskItemByIdQueryResult> Handle(GetTaskItemByIdQuery request, CancellationToken cancellationToken)
         {
-            var values = await _taskItemService.GetByIdAsync(request.Id);
+            var task = await _taskItemService.GetTaskItemWithProjectAndCommentsAsync(request.Id);
+            if (task == null) return null;
+
             return new GetTaskItemByIdQueryResult
             {
-                Id = values.Id,
-                Title = values.Title,
-                Description = values.Description,
-                ProjectId = values.ProjectId,
-                AssignedToUserId = values.AssignedToUserId,
-                Status = values.Status,
-                Priority = values.Priority,
-                Deadline = values.Deadline,
-                CreatedDate = values.CreatedDate,
-                Comments = values.Comments.Select(comment => new TaskItemCommentResult
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Status = task.Status,
+                Priority = task.Priority,
+                CreatedDate = task.CreatedDate,
+                Deadline = task.Deadline,
+                ProjectId = task.ProjectId,
+                ProjectTitle = task.Project?.Title,
+                AssignedToUser = task.AssignedToUser?.FullName,
+                Comments = task.Comments.Select(c => new TaskItemCommentResult
                 {
-                    Id = comment.Id,
-                    UserId = comment.UserId,
-                    Content = comment.Content,
-                    CreatedDate = comment.CreatedDate
+                    Id = c.Id,
+                    Content = c.Content,
+                    CreatedDate = c.CreatedDate,
+                    UserId = c.UserId,
+                    UserFullName = c.User?.FullName
                 }).ToList()
             };
         }

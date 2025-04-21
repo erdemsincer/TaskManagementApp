@@ -87,5 +87,11 @@ namespace TaskManagementApp.WebAPI.Controllers
             var result = await _mediator.Send(new GetOverdueTasksQuery());
             return Ok(result);
         }
+        [HttpPut("UpdateStatus")]
+        public async Task<IActionResult> UpdateTaskStatus(UpdateTaskItemStatusCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok("Görev durumu güncellendi.");
+        }
     }
 }

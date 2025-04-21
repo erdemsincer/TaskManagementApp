@@ -17,6 +17,7 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.TaskItemHan
         public async Task<List<GetTaskItemQueryResult>> Handle(GetTaskItemQuery request, CancellationToken cancellationToken)
         {
             var values = await _taskItemService.GetAllAsync();
+
             var result = values.Select(t => new GetTaskItemQueryResult
             {
                 Id = t.Id,
@@ -28,16 +29,19 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.TaskItemHan
                 Deadline = t.Deadline,
                 ProjectId = t.ProjectId,
                 AssignedToUserId = t.AssignedToUserId,
-                Comments = t.Comments.Select(c => new TaskItemCommentResult
-                {
-                    Id = c.Id,
-                    UserId = c.UserId,
-                    Content = c.Content,
-                    CreatedDate = c.CreatedDate
-                }).ToList()
+                Comments = t.Comments != null
+                    ? t.Comments.Select(c => new TaskItemCommentResult
+                    {
+                        Id = c.Id,
+                        UserId = c.UserId,
+                        Content = c.Content,
+                        CreatedDate = c.CreatedDate
+                    }).ToList()
+                    : new List<TaskItemCommentResult>()
             }).ToList();
 
             return result;
         }
+
     }
 }

@@ -18,12 +18,18 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.TaskItemHan
         {
             var tasks = await _taskItemService.GetTasksByUserIdAsync(request.UserId);
 
-            return tasks.Select(t => new UserTaskResult
+            return tasks.Select(task => new UserTaskResult
             {
-                Id = t.Id,
-                Title = t.Title,
-                Status = t.Status,
-                Deadline = t.Deadline
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Status = task.Status,
+                Priority = task.Priority,
+                Deadline = task.Deadline,
+                CreatedDate = task.CreatedDate,
+                ProjectId = task.ProjectId,
+                ProjectTitle = task.Project?.Title, // ❗ null olabilir, ?. kullandık
+                AssignedToUser = task.AssignedToUser?.FullName // ❗ null olabilir
             }).ToList();
         }
     }
