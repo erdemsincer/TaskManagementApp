@@ -80,6 +80,44 @@ namespace TaskManagementApp.UI.Controllers
             return RedirectToAction("MyTasks");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var token = HttpContext.Session.GetString("token");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.GetAsync($"https://localhost:7164/api/TaskItem/{id}");
+
+            if (!response.IsSuccessStatusCode) return NotFound();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var task = JsonConvert.DeserializeObject<UpdateTaskItemDto>(json); // DTO'yu senin adına tanımlayacağım
+
+            return View(task);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateTaskItemDto dto)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var token = HttpContext.Session.GetString("token");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var jsonData = JsonConvert.SerializeObject(dto);
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+            var response = await client.PutAsync("https://localhost:7164/api/TaskItem", content);
+
+            if (response.IsSuccessStatusCode)
+                return RedirectToAction("MyTasks", "TaskItem");
+
+            ViewBag.Error = "Güncelleme başarısız oldu.";
+            return View(dto);
+        }
+
+
+
 
     }
 }
