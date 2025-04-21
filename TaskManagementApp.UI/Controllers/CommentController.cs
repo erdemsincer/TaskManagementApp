@@ -27,14 +27,13 @@ namespace TaskManagementApp.UI.Controllers
 
             if (string.IsNullOrEmpty(token))
             {
-                // Giriş yapılmamışsa login'e yönlendir
                 return RedirectToAction("Login", "Auth");
             }
 
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            // 🔐 Token'dan UserId çözümleme
+            // 🔐 Token'dan UserId çöz
             var payload = token.Split('.')[1];
             var base64 = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
             var jsonBytes = Convert.FromBase64String(base64.Replace('-', '+').Replace('_', '/'));
@@ -51,9 +50,10 @@ namespace TaskManagementApp.UI.Controllers
 
             var response = await client.PostAsync("https://localhost:7164/api/Comment", content);
 
-            // 🌀 Başarılıysa proje detayına dön
-            return RedirectToAction("Detail", "Project", new { id = dto.ProjectId });
+            // ✅ Göreve geri dön
+            return RedirectToAction("Detail", "TaskItem", new { id = dto.TaskItemId });
         }
+
 
 
     }

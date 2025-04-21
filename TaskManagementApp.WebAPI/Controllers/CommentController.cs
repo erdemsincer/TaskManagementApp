@@ -39,11 +39,16 @@ namespace TaskManagementApp.WebAPI.Controllers
         {
             await _mediator.Send(command);
 
-            // 🟢 SignalR ile yorum bildirimi
-            await _hubContext.Clients.All.SendAsync("ReceiveNotification", $"💬 Yeni yorum: {command.Content}");
+            await _hubContext.Clients.All.SendAsync("ReceiveComment", new
+            {
+                TaskItemId = command.TaskItemId,
+                Content = command.Content,
+                CreatedDate = DateTime.UtcNow.ToString("g")
+            });
 
             return Ok("Comment başarıyla eklendi");
         }
+
 
         [HttpDelete]
         public async Task<IActionResult> RemoveComment(int id)
