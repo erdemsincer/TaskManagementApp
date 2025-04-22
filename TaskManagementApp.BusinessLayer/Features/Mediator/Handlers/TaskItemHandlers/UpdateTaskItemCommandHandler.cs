@@ -13,18 +13,26 @@ namespace TaskManagementApp.BusinessLayer.Features.Mediator.Handlers.TaskItemHan
             _taskItemService = taskItemService;
         }
 
-        public async Task Handle(UpdateTaskItemCommand request,CancellationToken cancellationToken)
+        public async Task Handle(UpdateTaskItemCommand request, CancellationToken cancellationToken)
         {
             var values = await _taskItemService.GetByIdAsync(request.Id);
+
             values.Title = request.Title;
             values.Description = request.Description;
             values.Status = request.Status;
-            values.Deadline = request.Deadline;
+
+            // 🔥 Önemli: PostgreSQL için UTC zorunlu!
+            if (request.Deadline.HasValue)
+            {
+                values.Deadline = DateTime.SpecifyKind(request.Deadline.Value, DateTimeKind.Utc);
+            }
+
             values.Priority = request.Priority;
             values.ProjectId = request.ProjectId;
             values.AssignedToUserId = request.AssignedToUserId;
-            await _taskItemService.UpdateAsync(values);
 
+            await _taskItemService.UpdateAsync(values);
         }
+
     }
 }

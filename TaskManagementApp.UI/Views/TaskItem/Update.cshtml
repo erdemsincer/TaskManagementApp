@@ -1,0 +1,79 @@
+﻿@using TaskManagementApp.DtoLayer.Dtos.TaskItemDtos
+@using TaskManagementApp.DtoLayer.Dtos.ProjectDtos
+@model UpdateTaskItemDto
+
+@{
+    ViewData["Title"] = "Görev Güncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary"><i class="fas fa-edit"></i> Görev Güncelle</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <form asp-controller="TaskItem" asp-action="Update" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="AssignedToUserId" />
+
+        <div class="mb-3">
+            <label>Başlık</label>
+            <input asp-for="Title" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Açıklama</label>
+            <textarea asp-for="Description" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Durum</label>
+            <select asp-for="Status" class="form-select">
+                <option value="ToDo">Yapılacak</option>
+                <option value="InProgress">Devam Ediyor</option>
+                <option value="Done">Tamamlandı</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Öncelik</label>
+            <select asp-for="Priority" class="form-select">
+                <option value="Low">Düşük</option>
+                <option value="Medium">Orta</option>
+                <option value="High">Yüksek</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Proje</label>
+            <select asp-for="ProjectId" class="form-select">
+                @if (ViewBag.Projects != null)
+                {
+                    foreach (ResultProjectDto project in ViewBag.Projects)
+                    {
+                        <option value="@project.Id" selected="@(project.Id == Model.ProjectId)">
+                            @project.Title
+                        </option>
+                    }
+                }
+                else
+                {
+                    <option disabled selected>Proje listesi yüklenemedi</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Deadline</label>
+            <input asp-for="Deadline" type="date" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a href="/TaskItem/MyTasks" class="btn btn-outline-secondary">İptal</a>
+    </form>
+</div>
